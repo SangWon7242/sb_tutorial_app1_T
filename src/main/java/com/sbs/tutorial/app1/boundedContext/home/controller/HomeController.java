@@ -1,4 +1,4 @@
-package com.sbs.tutorial.app1.boundedContext.app.home.controller;
+package com.sbs.tutorial.app1.boundedContext.home.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

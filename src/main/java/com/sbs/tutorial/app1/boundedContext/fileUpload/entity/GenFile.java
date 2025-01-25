@@ -1,4 +1,4 @@
-package com.sbs.tutorial.app1.boundedContext.app.fileUpload.entity;
+package com.sbs.tutorial.app1.boundedContext.fileUpload.entity;
 
 import com.sbs.tutorial.app1.base.entity.BaseEntity;
 import jakarta.persistence.Entity;
