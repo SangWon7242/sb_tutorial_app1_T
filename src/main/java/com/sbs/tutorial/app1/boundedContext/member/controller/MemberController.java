@@ -2,6 +2,7 @@ package com.sbs.tutorial.app1.boundedContext.member.controller;
 
 import com.sbs.tutorial.app1.boundedContext.member.entity.Member;
 import com.sbs.tutorial.app1.boundedContext.member.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,16 +25,31 @@ public class MemberController {
   }
 
   @PostMapping("/join")
-  @ResponseBody
-  public String join(String username, String password, String email, MultipartFile profileImg) {
+  public String join(String username, String password, String email, MultipartFile profileImg, HttpSession session) {
     Member oldMember = memberService.getMemberByUsername(username);
+
     if (oldMember != null) {
-      return "이미 가입된 회원입니다.";
+      return "redirect:/?errorMsg=Already done.";
     }
 
     Member member = memberService.join(username, "{noop}" + password, email, profileImg);
 
 
-    return "가입완료";
+    session.setAttribute("loginedMemberId", member.getId());
+
+    return "redirect:/member/profile";
+  }
+
+  @GetMapping("/profile")
+  public String showProfile(HttpSession session) {
+    Long loginedMemberId = (Long) session.getAttribute("loginedMemberId");
+
+    boolean isLogined = loginedMemberId != null;
+
+    if (isLogined == false) {
+      return "redirect:/?errorMsg=Need to login!";
+    }
+
+    return "member/profile";
   }
 }
