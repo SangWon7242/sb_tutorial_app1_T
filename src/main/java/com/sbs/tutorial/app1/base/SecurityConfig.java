@@ -18,7 +18,20 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.ignoringRequestMatchers("/**")) // 특정 경로는 CSRF 제외
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().permitAll() // 모든 요청 허용
+            .requestMatchers("/", "/member/join").permitAll()
+            .requestMatchers("/css/**", "/js/**").permitAll()
+            .anyRequest().authenticated() // .anyRequest().authenticated() : 특정 경로는 로그인 필요
+        )
+        .formLogin(form -> form
+            .loginPage("/member/login") // GET : 로그인 페이지
+            .loginProcessingUrl("/member/login") // POST : 로그인 처리
+            .defaultSuccessUrl("/member/profile") // 로그인 성공시 리다이렉트
+            .permitAll()
+        )
+        .logout(logout -> logout
+            .logoutUrl("/member/logout") // GET : 로그아웃
+            .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트
+            .permitAll()
         );
 
     return http.build();
