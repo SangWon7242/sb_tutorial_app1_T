@@ -2,22 +2,30 @@ package com.sbs.tutorial.app1;
 
 import com.sbs.tutorial.app1.boundedContext.home.controller.HomeController;
 import com.sbs.tutorial.app1.boundedContext.member.controller.MemberController;
+import com.sbs.tutorial.app1.boundedContext.member.entity.Member;
 import com.sbs.tutorial.app1.boundedContext.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.net.URL;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -96,5 +104,56 @@ class App1ApplicationTests {
         .andExpect(handler().handlerType(MemberController.class))
         .andExpect(handler().methodName("showProfile"))
         .andExpect(content().string(containsString("user4@test.com")));
+  }
+
+  @Test
+  @DisplayName("회원가입")
+  @Rollback(false)
+  void t5() throws Exception {
+    // 파일 다운로드 - 실제 이미지 URL에서 다운로드
+    String imageUrl = "https://picsum.photos/200/300";
+    String originalFileName = "test-image.jpg";
+
+    byte[] imageBytes;
+    
+    try {
+      URL url = new URL(imageUrl);
+      imageBytes = url.openStream().readAllBytes();
+    } catch (IOException e) {
+      // 네트워크 오류 시 기본 테스트 데이터 사용
+      imageBytes = "test image content".getBytes();
+    }
+    
+    MockMultipartFile profileImg = new MockMultipartFile(
+        "profileImg", // 폼 필드명 (HTML form의 name 속성)
+        originalFileName, // 원본 파일명
+        "image/jpeg", // MIME 타입
+        imageBytes // 실제 파일 데이터
+    );
+    
+    // 회원가입(MVC MOCK)
+    ResultActions resultActions = mvc
+        .perform(
+            multipart("/member/join")
+                .file(profileImg)
+                .param("username", "user5")
+                .param("password", "1234")
+                .param("email", "user5@test.com")
+                .characterEncoding("UTF-8")
+        ).andDo(print());
+    
+    // 회원가입 성공 시 프로필 페이지로 리다이렉트 확인
+    resultActions.andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/member/profile"));
+    
+    // 5번 회원이 생성, 테스트
+    long memberCount = memberService.count();
+    assertThat(memberCount).isEqualTo(5); // TestInitData에서 4명 + 새로 가입한 1명 = 5명
+    
+    // 생성된 회원 정보 확인
+    Member newMember = memberService.getMemberByUsername("user5");
+    assertThat(newMember).isNotNull();
+    assertThat(newMember.getUsername()).isEqualTo("user5");
+    assertThat(newMember.getEmail()).isEqualTo("user5@test.com");
   }
 }

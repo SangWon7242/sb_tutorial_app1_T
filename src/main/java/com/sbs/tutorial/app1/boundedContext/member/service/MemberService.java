@@ -31,20 +31,23 @@ public class MemberService implements UserDetailsService {
     return memberRepository.findByUsername(username).orElse(null);
   }
 
+
   public Member join(String username, String password, String email, MultipartFile profileImg) {
     // 프로필 이미지가 저장될 경로를 생성한다.
-    String profileImgRelPath = "member/" + UUID.randomUUID().toString() + ".png";
-    File profileImgFile = new File(genFileDirPath + "/" + profileImgRelPath);
+    String profileImgDirName = "member";
+    String fileName = UUID.randomUUID().toString() + ".png";
+    String profileImgDirPath = genFileDirPath + "/" + profileImgDirName; // 폴더 경로
+    String profileImgFilePath = profileImgDirPath + "/" + fileName; // 파일 경로
 
-    if (!profileImgFile.exists()) {
-      profileImgFile.mkdirs(); // 관련된 폴더가 혹시나 없다면 만들어준다.
-    }
+    new File(profileImgDirPath).mkdirs(); // 관련된 폴더가 혹시나 없다면 만들어준다.
 
     try {
-      profileImg.transferTo(profileImgFile);
+      profileImg.transferTo(new File(profileImgFilePath));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+
+    String profileImgRelPath = profileImgDirName + "/" + fileName;
 
     Member member = Member.builder()
         .username(username)
