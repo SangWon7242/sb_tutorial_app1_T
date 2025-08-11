@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test, base-addi
+    active: dev, base-addi
   thymeleaf:
     cache: false
     prefix: file:src/main/resources/templates/
