@@ -14,7 +14,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -25,7 +24,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -144,16 +142,21 @@ class App1ApplicationTests {
     
     // 회원가입 성공 시 프로필 페이지로 리다이렉트 확인
     resultActions.andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/member/profile"));
+        .andExpect(redirectedUrl("/member/profile"))
+        .andExpect(handler().handlerType(MemberController.class))
+        .andExpect(handler().methodName("join"));
+
     
     // 5번 회원이 생성, 테스트
     long memberCount = memberService.count();
     assertThat(memberCount).isEqualTo(5); // TestInitData에서 4명 + 새로 가입한 1명 = 5명
     
     // 생성된 회원 정보 확인
-    Member newMember = memberService.getMemberByUsername("user5");
-    assertThat(newMember).isNotNull();
-    assertThat(newMember.getUsername()).isEqualTo("user5");
-    assertThat(newMember.getEmail()).isEqualTo("user5@test.com");
+    Member member = memberService.getMemberByUsername("user5");
+    assertThat(member).isNotNull();
+    assertThat(member.getUsername()).isEqualTo("user5");
+    assertThat(member.getEmail()).isEqualTo("user5@test.com");
+
+    memberService.removeProfileImg(member);
   }
 }
