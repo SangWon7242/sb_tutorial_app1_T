@@ -26,6 +26,11 @@ public class MemberController {
   private final MemberService memberService;
   private final PasswordEncoder passwordEncoder;
 
+  @GetMapping("/login")
+  public String showLogin() {
+    return "member/login";
+  }
+
   @GetMapping("/join")
   public String showJoin() {
     return "member/join";

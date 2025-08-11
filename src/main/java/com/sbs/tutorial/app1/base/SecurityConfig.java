@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
+    http // csrf.disable() : 완전 비활성화
         .csrf(csrf -> csrf.ignoringRequestMatchers("/**")) // 특정 경로는 CSRF 제외
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/member/join").permitAll()
