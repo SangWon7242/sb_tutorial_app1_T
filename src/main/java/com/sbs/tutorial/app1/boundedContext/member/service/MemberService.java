@@ -100,4 +100,6 @@ public class MemberService implements UserDetailsService {
     // 파일이 있는경우만 삭제
     if(file.exists()) file.delete();
   }
+
+
 }

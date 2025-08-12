@@ -47,6 +47,19 @@
     text-decoration: underline;
     color: red;
   }
+
+  .profile-box {
+    display: flex;
+    align-items: center;
+    gap: 0 10px;
+  }
+
+  .profile-box .profile-img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
 </style>
 
 
@@ -69,8 +82,11 @@
         </li>
 
         <!-- 로그인한 경우 -->
-        <li sec:authorize="isAuthenticated()">
-          <span>안녕하세요, <span sec:authentication="name"></span>님!</span>
+        <li sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 0 10px;">
+          <div class="profile-box">
+            <img class="profile-img" th:src="@{|${loginedMemberProfileImg}|}">
+            <span th:text="${loginedMember.username}"></span>님!
+          </div>
           <a href="/member/logout" class="btn btn-secondary">로그아웃</a>
         </li>
 
