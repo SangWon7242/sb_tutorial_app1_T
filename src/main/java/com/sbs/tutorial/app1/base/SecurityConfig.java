@@ -20,6 +20,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/member/join").permitAll()
             .requestMatchers("/css/**", "/js/**").permitAll()
+            .requestMatchers("/.well-known/**").permitAll()
             .anyRequest().authenticated() // .anyRequest().authenticated() : 특정 경로는 로그인 필요
         )
         .formLogin(form -> form
@@ -29,8 +30,11 @@ public class SecurityConfig {
             .permitAll()
         )
         .logout(logout -> logout
-            .logoutUrl("/member/logout") // GET : 로그아웃
+            .logoutUrl("/member/logout") // POST : 로그아웃(시큐리티 기본 로그아웃은 post)
             .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트
+            .invalidateHttpSession(true) // 세션 삭제
+            .deleteCookies("JSESSIONID")
+            .clearAuthentication(true) // 인증 삭제
             .permitAll()
         );
 

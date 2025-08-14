@@ -99,7 +99,10 @@
               <img class="profile-img" th:src="@{|${loginedMemberProfileImg}|}">
               <span th:text="${loginedMember.username}"></span>님!
             </div>
-            <a href="/member/logout" class="btn btn-secondary">로그아웃</a>
+            <a onclick="this.nextElementSibling.submit()" class="btn btn-secondary">로그아웃</a>
+            <form hidden th:action="@{/member/logout}" method="POST">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+            </form>
           </li>
 
           <li sec:authorize="isAuthenticated()"><a href="/member/profile">프로필</a></li>
