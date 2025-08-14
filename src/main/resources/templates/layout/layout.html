@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>스프링부트 앱</title>
+
+  <!-- 제이쿼리 불러오기 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- 테일윈드 css 불러오기 -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <style>
+    @font-face {
+      font-family: 'GmarketSansMedium';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html > body {
+      font-family: "GmarketSansMedium", serif;
+      text-underline-position: under;
+    }
+
+    .top-bar {
+      border-bottom: 1px solid #ccc;
+      height: 60px;
+      background-color: #dfdfdf;
+    }
+
+    .top-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      padding: 0 20px;
+    }
+
+    .top-bar .logo-box {
+      display: flex;
+      align-items: center;
+    }
+
+    .top-bar .logo {
+      margin-right: 20px;
+      font-weight: bold;
+    }
+
+    .top-bar .nav-menu {
+      display: flex;
+      gap: 0 20px;
+    }
+
+    .top-bar .nav-menu li:hover > a {
+      text-decoration: underline;
+      color: red;
+    }
+
+    .profile-box {
+      display: flex;
+      align-items: center;
+      gap: 0 10px;
+    }
+
+    .profile-box .profile-img {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="container">
+      <div class="logo-box">
+        <a href="/" class="logo">Spring Boot App</a>
+      </div>
+
+      <nav class="nav-box">
+        <ul class="nav-menu">
+          <!-- 로그인하지 않은 경우 -->
+          <li sec:authorize="!isAuthenticated()">
+            <a href="/member/login" class="btn btn-primary">로그인</a>
+          </li>
+
+          <!-- 로그인하지 않은 경우 -->
+          <li sec:authorize="!isAuthenticated()">
+            <a href="/member/join" class="btn btn-secondary">회원가입</a>
+          </li>
+
+          <!-- 로그인한 경우 -->
+          <li sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 0 10px;">
+            <div class="profile-box">
+              <img class="profile-img" th:src="@{|${loginedMemberProfileImg}|}">
+              <span th:text="${loginedMember.username}"></span>님!
+            </div>
+            <a href="/member/logout" class="btn btn-secondary">로그아웃</a>
+          </li>
+
+          <li sec:authorize="isAuthenticated()"><a href="/member/profile">프로필</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-wrap">
+    <section layout:fragment="content"></section>
+  </main>
+
+  <footer class="bottom-bar h-20 bg-gray-100">
+    <div class="container mx-auto h-full flex justify-center items-center">
+      Spring Boot App
+    </div>
+  </footer>
+</body>
+</html>
+

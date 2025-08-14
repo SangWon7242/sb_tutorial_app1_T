@@ -1,97 +1,15 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<meta charset="UTF-8">
+<html layout:decorate="~{layout/layout.html}">
+<head>
+  <title>메인화면</title>
+</head>
 
-<style>
-  body, ul, li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .top-bar {
-    border-bottom: 1px solid #ccc;
-    height: 60px;
-    background-color: #dfdfdf;
-  }
-
-  .top-bar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    padding: 0 20px;
-  }
-
-  .top-bar .logo-box {
-    display: flex;
-    align-items: center;
-  }
-
-  .top-bar .logo {
-    margin-right: 20px;
-    font-weight: bold;
-  }
-
-  .top-bar .nav-menu {
-    display: flex;
-    gap: 0 20px;
-  }
-
-  .top-bar .nav-menu li:hover > a {
-    text-decoration: underline;
-    color: red;
-  }
-
-  .profile-box {
-    display: flex;
-    align-items: center;
-    gap: 0 10px;
-  }
-
-  .profile-box .profile-img {
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-</style>
-
-
-<header class="top-bar">
-  <div class="container">
-    <div class="logo-box">
-      <a href="/" class="logo">Spring Boot App</a>
-    </div>
-
-    <nav class="nav-box">
-      <ul class="nav-menu">
-        <!-- 로그인하지 않은 경우 -->
-        <li sec:authorize="!isAuthenticated()">
-          <a href="/member/login" class="btn btn-primary">로그인</a>
-        </li>
-
-        <!-- 로그인하지 않은 경우 -->
-        <li sec:authorize="!isAuthenticated()">
-          <a href="/member/join" class="btn btn-secondary">회원가입</a>
-        </li>
-
-        <!-- 로그인한 경우 -->
-        <li sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 0 10px;">
-          <div class="profile-box">
-            <img class="profile-img" th:src="@{|${loginedMemberProfileImg}|}">
-            <span th:text="${loginedMember.username}"></span>님!
-          </div>
-          <a href="/member/logout" class="btn btn-secondary">로그아웃</a>
-        </li>
-
-        <li sec:authorize="isAuthenticated()"><a href="/member/profile">프로필</a></li>
-      </ul>
-    </nav>
+<body>
+<section layout:fragment="content">
+  <div style="padding: 40px 20px; text-align: center;">
+    <h1>Spring Boot App에 오신 것을 환영합니다!</h1>
+    <p>이곳은 메인 페이지입니다.</p>
   </div>
-</header>
+</section>
+</body>
+
+</html>
