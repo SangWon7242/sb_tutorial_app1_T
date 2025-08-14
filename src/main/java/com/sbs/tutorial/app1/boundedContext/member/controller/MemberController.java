@@ -26,16 +26,19 @@ public class MemberController {
   private final MemberService memberService;
   private final PasswordEncoder passwordEncoder;
 
+  @PreAuthorize("isAnonymous()") // 로그인 하지 않은 사용자만 접속 가능
   @GetMapping("/login")
   public String showLogin() {
     return "member/login";
   }
 
+  @PreAuthorize("isAnonymous()")
   @GetMapping("/join")
   public String showJoin() {
     return "member/join";
   }
 
+  @PreAuthorize("isAnonymous()")
   @PostMapping("/join")
   public String join(HttpServletRequest req, String username, String password, String email, MultipartFile profileImg) {
     Member oldMember = memberService.getMemberByUsername(username);

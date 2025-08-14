@@ -84,12 +84,12 @@
       <nav class="nav-box">
         <ul class="nav-menu">
           <!-- 로그인하지 않은 경우 -->
-          <li sec:authorize="!isAuthenticated()">
+          <li sec:authorize="isAnonymous()">
             <a href="/member/login" class="btn btn-primary">로그인</a>
           </li>
 
           <!-- 로그인하지 않은 경우 -->
-          <li sec:authorize="!isAuthenticated()">
+          <li sec:authorize="isAnonymous()">
             <a href="/member/join" class="btn btn-secondary">회원가입</a>
           </li>
 
