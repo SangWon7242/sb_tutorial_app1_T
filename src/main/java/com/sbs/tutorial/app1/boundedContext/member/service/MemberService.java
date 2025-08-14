@@ -2,6 +2,7 @@ package com.sbs.tutorial.app1.boundedContext.member.service;
 
 import com.sbs.tutorial.app1.boundedContext.member.entity.Member;
 import com.sbs.tutorial.app1.boundedContext.member.repository.MemberRepository;
+import com.sbs.tutorial.app1.util.Ut.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,8 +35,9 @@ public class MemberService implements UserDetailsService {
 
   public Member join(String username, String password, String email, MultipartFile profileImg) {
     // 프로필 이미지가 저장될 경로를 생성한다.
-    String profileImgDirName = "member";
-    String fileName = UUID.randomUUID().toString() + ".png";
+    String profileImgDirName = "member/" + Ut.date.getCurrentDateFormatted("yyyy_MM_dd");
+    String ext = Ut.file.getExt(profileImg.getOriginalFilename());
+    String fileName = UUID.randomUUID() + "." + ext;
     String profileImgDirPath = genFileDirPath + "/" + profileImgDirName; // 폴더 경로
     String profileImgFilePath = profileImgDirPath + "/" + fileName; // 파일 경로
 
